@@ -48,3 +48,6 @@ int main(int argc, const char * argv[]) {
     return 0;
 }
 
+//terminal/new terminal ->
+//gcc -g main.c Pokemon.c Map.c -o main
+//./main
