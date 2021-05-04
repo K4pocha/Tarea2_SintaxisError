@@ -4,7 +4,7 @@
 #include <string.h>
 
 
-typedef struct IDPokemon{  //Nodo de la pokedex
+typedef struct Pokemon{  //Nodo de la pokedex
     char nombre[50];//Nombre
     char tipo[50];//Tipos
     char prevEvo[50];//Evolucion previa
@@ -145,12 +145,11 @@ int main()
 void leerArchivo(HashMap * PokedexID, HashMap * mapaPokedex, HashMap * almacenamientoPoke, FILE * archivo){
 
     char * linea = (char*)malloc(1024*sizeof(char));
-    char * saltar = (char*)malloc(1024*sizeof(char));
     Pokedex * nuevaID = (Pokedex *)malloc(sizeof(Pokedex));
     Pokemon * nuevoPoke = (Pokemon *)malloc(sizeof(Pokemon));
-    saltar = fgets(linea, 100, archivo);
+    fgets(linea, 1023, archivo);
     int encontrado=0;
-    printf("primera linea = %s", saltar);
+    printf("primera linea = %s", linea);
     char * auxkey = (char*)malloc(50*sizeof(char));
 
     while(fgets (linea, 1023, archivo) != NULL){
