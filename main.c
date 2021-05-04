@@ -2,9 +2,10 @@
 #include <stdlib.h>
 #include "hashmap.h"
 #include <string.h>
+#include <stdbool.h>
 
 
-typedef struct Pokemon{  //Nodo de la pokedex
+typedef struct Pokedex {  //Nodo de la pokedex
     char nombre[50];//Nombre
     char tipo[50];//Tipos
     char prevEvo[50];//Evolucion previa
@@ -66,7 +67,8 @@ void leerArchivo(HashMap * PokedexID, HashMap * PokedexName, HashMap * almacenam
 void crearPokedex(char * name, char * type, char * prevEvo, char * nextEvo, char * region, int idPokedex, Pokedex * nuevaID);//La variable exist se añade después en la funcion pokeAtrapado
 Pokemon * crearPokemon(int id, int PC, int PS, char * nombre, char * genero);   //Inicializa una estructura nueva, y returna la misma estructura rellenada si corresponde
 void guardarPokedex(HashMap * mapaPokedex, HashMap * PokedexID, Pokedex * nuevoID);
-void mostrarTodoPokedex (HashMap * mapaPokedex);
+void buscarPorNombre (HashMap * almacenamientoPoke);
+void buscarPorNombrePokedex (HashMap * mapaPokedex);
 
 
 int main()
@@ -76,6 +78,8 @@ int main()
     HashMap * almacenamientoPoke = createMap(200); //que es lo que tiene dentro?
     FILE * archivo = fopen("pokemon Archivo1.csv","r");
     leerArchivo(PokedexID, mapaPokedex, almacenamientoPoke, archivo);
+    //buscarPorNombre (almacenamientoPoke);
+    buscarPorNombrePokedex (mapaPokedex);
 
 
 
@@ -147,7 +151,7 @@ void leerArchivo(HashMap * PokedexID, HashMap * mapaPokedex, HashMap * almacenam
     char * linea = (char*)malloc(1024*sizeof(char));
     Pokedex * nuevaID = (Pokedex *)malloc(sizeof(Pokedex));
     Pokemon * nuevoPoke = (Pokemon *)malloc(sizeof(Pokemon));
-    fgets(linea, 1023, archivo);
+    linea = fgets(linea, 100, archivo);
     int encontrado=0;
     printf("primera linea = %s", linea);
     char * auxkey = (char*)malloc(50*sizeof(char));
@@ -158,16 +162,17 @@ void leerArchivo(HashMap * PokedexID, HashMap * mapaPokedex, HashMap * almacenam
        nuevaID->cantidadPoke = 0;
        nuevoPoke->id = atoi(get_csv_field(linea, 0));//ID
        strcpy(nuevoPoke->nombre, get_csv_field(linea,1));
+       strdup(nuevoPoke->nombre);
        nuevoPoke->PC = atoi(get_csv_field(linea,3));//PC
        nuevoPoke->PS = atoi(get_csv_field(linea,4));//PS
        strcpy(nuevoPoke->genero, get_csv_field(linea,5));//Genero
+       strdup(nuevoPoke->genero);
+
        strcpy(nuevaID->nombre, get_csv_field(linea,1));//Nombre
-
-
        strcpy(nuevaID->tipo, get_csv_field(linea,2));//Tipos
        itoa(nuevoPoke->id, auxkey, 10);
        printf("Pokemon numero = %d - Nombre: %s - ID: %d - key aux = ID %s\n", encontrado, nuevoPoke->nombre, nuevoPoke->id, auxkey);
-       strcpy(nuevaID->prevEvo, get_csv_field(linea,6));//Ev. previa
+       strcpy(nuevaID->prevEvo, strdup(get_csv_field(linea,6)));//Ev. previa
        strdup(nuevaID->prevEvo);
        strcpy(nuevaID->sigEvo, get_csv_field(linea,7));//Ev. post
        strdup(nuevaID->sigEvo);
@@ -175,12 +180,12 @@ void leerArchivo(HashMap * PokedexID, HashMap * mapaPokedex, HashMap * almacenam
        strcpy(nuevaID->region, get_csv_field(linea,9));//Region
        strdup(nuevaID->region);
 
-       insertMap(almacenamientoPoke,(auxkey),nuevoPoke);   //Guardado en el mapa de "almacenamiento"
+       insertMap(almacenamientoPoke, strdup(auxkey),nuevoPoke);   //Guardado en el mapa de "almacenamiento"
        guardarPokedex(mapaPokedex, PokedexID, nuevaID); //Guardado en mapa de pokedex
        nuevaID = (Pokedex *)malloc(sizeof(Pokedex));
        nuevoPoke = (Pokemon *)malloc(sizeof(Pokemon));
     }
-    printf("Archivo leido correctamente");
+    printf("Archivo leido correctamente\n");
 }
 
 void crearPokedex(char * nombre, char * tipo, char * prevEvo, char * sigEvo, char * region, int idPokedex, Pokedex * nuevo){
@@ -224,3 +229,67 @@ void guardarPokedex(HashMap * mapaPokedex, HashMap * PokedexID, Pokedex * nuevoI
     }
 }
 
+/** Hubieron problemas con el almacenamiento, pero se "soluciono" con un strdup en el insertmap de la lectura de archivo. 
+ * CAMBIAR TODOS LOS STRINGS ALMACENADOS A UN STRING CON STRDUP **/
+
+void buscarPorNombrePokedex (HashMap * mapaPokedex)
+{
+    Pokedex * actual = firstMap(mapaPokedex);
+    char * pokeBuscado = (char *)malloc(50*sizeof(char));
+    char * auxiliar = (char *)malloc(50*sizeof(char));  //Variable para almacenar nombre pokemon leido de el mapa
+
+    printf ("Ingresa nombre del Pokemon: \n");
+    gets(pokeBuscado);
+    int existe = 0;
+
+    while (actual != NULL) {
+        auxiliar = strtok(actual->nombre, " "); //strtok = strtoken -> Separa el string segun el delimitador (en este caso, " "), para solo leer el nombre del pokemon. Posibles problemas con pokemons con nombres compuestos o de dos palabras
+        strdup(auxiliar);
+        strdup(pokeBuscado);
+        //printf (" %d -", actual->numeroPokedex);
+        if (strcmp(auxiliar, pokeBuscado) == 0) {
+            existe = 1;
+            printf ("----------------\n");
+            printf ("Pokemon: %s \n", actual->nombre);
+            printf ("Tipo: %s \n", actual->tipo);
+            printf ("Evolucion: %s \n", actual->sigEvo);
+            printf ("Antevolucion: %s \n", actual->prevEvo);
+            printf ("Region: %s \n", actual->region);
+            printf ("ID Pokedex: %d \n", actual->numeroPokedex);
+            printf ("Cantidad: %d \n", actual->cantidadPoke);
+            printf ("----------- \n");
+            break;
+        }
+        actual = nextMap(mapaPokedex);
+    }
+    if (existe == 0) printf ("No se encuentra almacenado el Pokemon de nombre: %s \n", pokeBuscado);
+}
+
+void buscarPorNombre (HashMap * almacenamientoPoke)
+{
+    Pokemon * actual = firstMap(almacenamientoPoke);
+    char * pokeBuscado = (char *)malloc(50*sizeof(char));
+    char * auxiliar = (char *)malloc(50*sizeof(char));  //Variable para almacenar nombre pokemon leido de el mapa
+
+    printf ("Ingresa nombre del Pokemon: \n");
+    gets(pokeBuscado);
+    int existe = 0;
+
+    while (actual != NULL) {
+        auxiliar = strtok(actual->nombre, " "); //strtok = strtoken -> Separa el string segun el delimitador (en este caso, " "), para solo leer el nombre del pokemon. Posibles problemas con pokemons con nombres compuestos o de dos palabras
+        strdup(auxiliar);
+        strdup(pokeBuscado);
+        //printf (" %d -", actual->id);
+        if (strcmp(auxiliar, pokeBuscado) == 0) {
+            existe = 1;
+            printf ("---------------- \n");
+            printf ("Pokemon: %s \n", actual->nombre);
+            printf ("PC: %d \n", actual->PC);
+            printf ("PS: %d \n", actual->PS);
+            printf ("-----------");
+            break;
+        }
+        actual = nextMap(almacenamientoPoke);
+    }
+    if (existe == 0) printf ("No se encuentra almacenado el Pokemon de nombre: %s \n", pokeBuscado);
+}
