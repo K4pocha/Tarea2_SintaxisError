@@ -63,7 +63,7 @@ const char *get_csv_field (char * tmp, int k) {
     return NULL;
 }
 
-void leerArchivo(HashMap * PokedexID, HashMap * PokedexName, HashMap * almacenamientoPoke, FILE * archivo);    //Lee el csv y almacena datos en los mapas implementados
+void ImpotarExportarArchivo(HashMap * PokedexName, HashMap * almacenamientoPoke);    //Lee el csv y almacena datos en los mapas implementados
 void crearPokedex(char * name, char * type, char * prevEvo, char * nextEvo, char * region, int idPokedex, Pokedex * nuevaID);//La variable exist se añade después en la funcion pokeAtrapado
 Pokemon * crearPokemon(int id, int PC, int PS, char * nombre, char * genero);   //Inicializa una estructura nueva, y returna la misma estructura rellenada si corresponde
 void guardarPokedex(HashMap * mapaPokedex, HashMap * PokedexID, Pokedex * nuevoID);
@@ -73,11 +73,10 @@ void buscarPorNombrePokedex (HashMap * mapaPokedex);
 
 int main()
 {
-    HashMap * mapaPokedex = createMap(200);
-    HashMap * PokedexID = createMap(200);//Almacena PokeID por numero de pokedex
-    HashMap * almacenamientoPoke = createMap(200); //que es lo que tiene dentro?
-    FILE * archivo = fopen("pokemon Archivo1.csv","r");
-    leerArchivo(PokedexID, mapaPokedex, almacenamientoPoke, archivo);
+    HashMap * mapaPokedex = createMap(200);//almacena Pokemon de la pokedex por nombre
+    HashMap * PokedexID = createMap(200);//Almacena Pokemon de la pokedex por numero de pokedex
+    HashMap * almacenamientoPoke = createMap(200); //almacena todos los pokemon que tiene el usuario por nombre
+    ImpotarExportarArchivo(mapaPokedex, almacenamientoPoke);
     //buscarPorNombre (almacenamientoPoke);
     buscarPorNombrePokedex (mapaPokedex);
 
@@ -87,7 +86,7 @@ int main()
         while(op < 10)
     {
         op = 0;
-        printf("1.- Exportar Pokemon\n");
+        printf("1.- Importar / Exportar Pokemon\n");
         printf("2.- Capturar Pokemon\n");
         printf("3.- Evolucionar Pokemon\n");
         printf("4.- Buscar Pokemon por Tipo\n");
@@ -146,46 +145,80 @@ int main()
     return 0;
 }
 
-void leerArchivo(HashMap * PokedexID, HashMap * mapaPokedex, HashMap * almacenamientoPoke, FILE * archivo){
+void ImpotarExportarArchivo(HashMap * mapaPokedex, HashMap * almacenamientoPoke){
+    printf("Ingrese el nombre del archivo:\n");
+    char * nombreArchivo[50];
+    scanf("%s",nombreArchivo);
+    
+    printf("Que operacion desea realizar:\n");
+    printf("1. Importar Pokemon\n");
+    printf("2. Exportar Pokemon\n");
+    printf("0. Volver al menu\n");
+    int op;
+    scanf("%d",op);
+    if(op == 1){
+        FILE * archivo = fopen(nombreArchivo,"r");
+        char * linea = (char*)malloc(1024*sizeof(char));
+        Pokedex * newPokedex;
+        Pokemon * newPokemon;
+        linea = fgets(linea, 1024, archivo);
 
-    char * linea = (char*)malloc(1024*sizeof(char));
-    Pokedex * nuevaID = (Pokedex *)malloc(sizeof(Pokedex));
-    Pokemon * nuevoPoke = (Pokemon *)malloc(sizeof(Pokemon));
-    linea = fgets(linea, 100, archivo);
-    int encontrado=0;
-    printf("primera linea = %s", linea);
-    char * auxkey = (char*)malloc(50*sizeof(char));
-
-    while(fgets (linea, 1023, archivo) != NULL){
-
-       encontrado++;
-       nuevaID->cantidadPoke = 0;
-       nuevoPoke->id = atoi(get_csv_field(linea, 0));//ID
-       strcpy(nuevoPoke->nombre, get_csv_field(linea,1));
-       strdup(nuevoPoke->nombre);
-       nuevoPoke->PC = atoi(get_csv_field(linea,3));//PC
-       nuevoPoke->PS = atoi(get_csv_field(linea,4));//PS
-       strcpy(nuevoPoke->genero, get_csv_field(linea,5));//Genero
-       strdup(nuevoPoke->genero);
-
-       strcpy(nuevaID->nombre, get_csv_field(linea,1));//Nombre
-       strcpy(nuevaID->tipo, get_csv_field(linea,2));//Tipos
-       itoa(nuevoPoke->id, auxkey, 10);
-       printf("Pokemon numero = %d - Nombre: %s - ID: %d - key aux = ID %s\n", encontrado, nuevoPoke->nombre, nuevoPoke->id, auxkey);
-       strcpy(nuevaID->prevEvo, strdup(get_csv_field(linea,6)));//Ev. previa
-       strdup(nuevaID->prevEvo);
-       strcpy(nuevaID->sigEvo, get_csv_field(linea,7));//Ev. post
-       strdup(nuevaID->sigEvo);
-       nuevaID->numeroPokedex = atoi(get_csv_field(linea,8));//Num. pokedex
-       strcpy(nuevaID->region, get_csv_field(linea,9));//Region
-       strdup(nuevaID->region);
-
-       insertMap(almacenamientoPoke, strdup(auxkey),nuevoPoke);   //Guardado en el mapa de "almacenamiento"
-       guardarPokedex(mapaPokedex, PokedexID, nuevaID); //Guardado en mapa de pokedex
-       nuevaID = (Pokedex *)malloc(sizeof(Pokedex));
-       nuevoPoke = (Pokemon *)malloc(sizeof(Pokemon));
+        while(fgets (linea, 1023, archivo) != NULL){
+            newPokemon = (Pokemon *)malloc(sizeof(Pokemon));
+            newPokemon->id = atoi(get_csv_field(linea,0));
+            strcpy(newPokemon->nombre,get_csv_field(linea,1));
+            newPokemon->PC = atoi(get_csv_field(linea,3));
+            newPokemon->PS = atoi(get_csv_field(linea,4));
+            strcpy(newPokemon->genero,get_csv_field(linea,5));
+            insertMap(almacenamientoPoke, strdup(newPokemon->nombre),newPokemon);   //Guardado en el mapa de "almacenamiento"
+            
+            Pokedex* aux = searchMap(mapaPokedex,newPokemon->nombre);
+            if(aux != NULL){
+                aux->cantidadPoke++;
+            }
+            else{
+                newPokedex = (Pokedex *)malloc(sizeof(Pokedex));
+                strcpy(newPokedex->nombre,get_csv_field(linea,1));
+                strcpy(newPokedex->tipo,get_csv_field(linea,2));
+                strcpy(newPokedex->prevEvo,get_csv_field(linea,6));
+                strcpy(newPokedex->sigEvo,get_csv_field(linea,7));
+                newPokedex->numeroPokedex = atoi(get_csv_field(linea,8));
+                strcpy(newPokedex->region,get_csv_field(linea,9));
+                newPokedex->cantidadPoke = 1;
+                insertMap(mapaPokedex,strdup(newPokedex->nombre),newPokedex);
+            }
+        }
+        printf("Archivo leido correctamente\n");
+        fclose(nombreArchivo);
+        return;
     }
-    printf("Archivo leido correctamente\n");
+    else if(op == 2){
+        FILE * archivo = fopen(nombreArchivo,"w");
+        fprintf(archivo,"id,nombre,tipos,pc,ps,sexo,evolucion previa,evolucion posterior,numero pokedex,region\n");
+        Pokemon * auxPokemon = firstMap(almacenamientoPoke);
+        Pokedex * auxPokedex;
+        while(auxPokemon != NULL){
+            auxPokedex = searchMap(mapaPokedex,auxPokemon->nombre);
+            fprintf(archivo,"%d,",auxPokemon->id);
+            fprintf(archivo,"%s,",auxPokemon->nombre);
+            fprintf(archivo,"%s,",auxPokedex->tipo);
+            fprintf(archivo,"%d,",auxPokemon->PC);
+            fprintf(archivo,"%d,",auxPokemon->PS);
+            fprintf(archivo,"%s,",auxPokemon->genero);
+            fprintf(archivo,"%s,",auxPokedex->prevEvo);
+            fprintf(archivo,"%s,",auxPokedex->sigEvo);
+            fprintf(archivo,"%d,",auxPokedex->numeroPokedex);
+            fprintf(archivo,"%s\n",auxPokedex->region);
+            auxPokemon = nextMap(almacenamientoPoke);
+        }
+        printf("Archivo exportado correctamente\n");
+        fclose(nombreArchivo);
+        return;
+    }
+    else{
+        return;
+    }
+    
 }
 
 void crearPokedex(char * nombre, char * tipo, char * prevEvo, char * sigEvo, char * region, int idPokedex, Pokedex * nuevo){
