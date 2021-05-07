@@ -63,22 +63,25 @@ const char *get_csv_field (char * tmp, int k) {
     return NULL;
 }
 
-void ImpotarExportarArchivo(HashMap * PokedexName, HashMap * almacenamientoPoke);    //Lee el csv y almacena datos en los mapas implementados
+void ImpotarExportarArchivo(HashMap * PokedexName, HashMap * almacenamientoPoke,int * nroPokemon);    //Lee el csv y almacena datos en los mapas implementados
 void crearPokedex(char * name, char * type, char * prevEvo, char * nextEvo, char * region, int idPokedex, Pokedex * nuevaID);//La variable exist se añade después en la funcion pokeAtrapado
 Pokemon * crearPokemon(int id, int PC, int PS, char * nombre, char * genero);   //Inicializa una estructura nueva, y returna la misma estructura rellenada si corresponde
 void guardarPokedex(HashMap * mapaPokedex, HashMap * PokedexID, Pokedex * nuevoID);
 void buscarPorNombre (HashMap * almacenamientoPoke);
 void buscarPorNombrePokedex (HashMap * mapaPokedex);
+void pokemonAtrapado(HashMap * mapaPokedex, HashMap * almacenamientoPoke,int * nroPokemon);
 
 
 int main()
 {
+    int nroPokemon = 0;//cuenta la cantidad de pokemon que hay en el almacenamiento
     HashMap * mapaPokedex = createMap(200);//almacena Pokemon de la pokedex por nombre
     HashMap * PokedexID = createMap(200);//Almacena Pokemon de la pokedex por numero de pokedex
     HashMap * almacenamientoPoke = createMap(200); //almacena todos los pokemon que tiene el usuario por nombre
-    ImpotarExportarArchivo(mapaPokedex, almacenamientoPoke);
+    ImpotarExportarArchivo(mapaPokedex, almacenamientoPoke,&nroPokemon);
     //buscarPorNombre (almacenamientoPoke);
     buscarPorNombrePokedex (mapaPokedex);
+    pokemonAtrapado(mapaPokedex,almacenamientoPoke,&nroPokemon);
 
 
 
@@ -145,25 +148,33 @@ int main()
     return 0;
 }
 
-void ImpotarExportarArchivo(HashMap * mapaPokedex, HashMap * almacenamientoPoke){
-    printf("Ingrese el nombre del archivo:\n");
-    char * nombreArchivo[50];
-    scanf("%s",nombreArchivo);
-    
-    printf("Que operacion desea realizar:\n");
-    printf("1. Importar Pokemon\n");
-    printf("2. Exportar Pokemon\n");
-    printf("0. Volver al menu\n");
-    int op;
-    scanf("%d",op);
-    if(op == 1){
-        FILE * archivo = fopen(nombreArchivo,"r");
+void ImpotarExportarArchivo(HashMap * mapaPokedex, HashMap * almacenamientoPoke,int * nroPokemon){
+    char nombreArchivo[50];
+    FILE * archivo;
+    printf(" Que operacion desea realizar:\n");
+    printf(" 1. Importar Pokemon\n");
+    printf(" 2. Exportar Pokemon\n");
+    printf(" 0. Volver al menu\n");
+    char op[10];
+    scanf(" %s",op);
+    while((op[0] < '0' || op[0] > '2') || (int)strlen(op) > 1){
+        printf ("===============================================================\n");
+        printf (" Por favor ingrese uno de los numeros anteriores: ");
+        scanf (" %s", op);
+    }
+    if(op[0] == '1'){
+        printf(" Ingrese el nombre del archivo:\n");
+        scanf("%s",nombreArchivo);
+        archivo = fopen(nombreArchivo,"r");
+        if(archivo == NULL){
+            printf(" El archivo no existe\n");
+            return;
+        }
         char * linea = (char*)malloc(1024*sizeof(char));
         Pokedex * newPokedex;
         Pokemon * newPokemon;
         linea = fgets(linea, 1024, archivo);
-
-        while(fgets (linea, 1023, archivo) != NULL){
+        while(fgets (linea, 1023, archivo) != NULL &&  *nroPokemon <= 100){
             newPokemon = (Pokemon *)malloc(sizeof(Pokemon));
             newPokemon->id = atoi(get_csv_field(linea,0));
             strcpy(newPokemon->nombre,get_csv_field(linea,1));
@@ -171,7 +182,7 @@ void ImpotarExportarArchivo(HashMap * mapaPokedex, HashMap * almacenamientoPoke)
             newPokemon->PS = atoi(get_csv_field(linea,4));
             strcpy(newPokemon->genero,get_csv_field(linea,5));
             insertMap(almacenamientoPoke, strdup(newPokemon->nombre),newPokemon);   //Guardado en el mapa de "almacenamiento"
-            
+            *nroPokemon +=1;
             Pokedex* aux = searchMap(mapaPokedex,newPokemon->nombre);
             if(aux != NULL){
                 aux->cantidadPoke++;
@@ -188,12 +199,19 @@ void ImpotarExportarArchivo(HashMap * mapaPokedex, HashMap * almacenamientoPoke)
                 insertMap(mapaPokedex,strdup(newPokedex->nombre),newPokedex);
             }
         }
-        printf("Archivo leido correctamente\n");
-        fclose(nombreArchivo);
-        return;
+        if(*nroPokemon <= 100){
+            printf(" Archivo leido correctamente\n");
+        }
+        if(*nroPokemon >100){
+            printf(" El almacenamiento alcanzo su capacidad Maxima\n");
+            printf(" Recuerde exportar sus Pokemon en un CAJA\n");
+            printf(" Y vuelva a Importar el archivo\n");
+        }
+        fclose(archivo);
     }
-    else if(op == 2){
-        FILE * archivo = fopen(nombreArchivo,"w");
+    else if(op[0] == '2'){
+        *nroPokemon = 0;
+        archivo = fopen("Caja_Auxiliar.csv","w");
         fprintf(archivo,"id,nombre,tipos,pc,ps,sexo,evolucion previa,evolucion posterior,numero pokedex,region\n");
         Pokemon * auxPokemon = firstMap(almacenamientoPoke);
         Pokedex * auxPokedex;
@@ -209,11 +227,12 @@ void ImpotarExportarArchivo(HashMap * mapaPokedex, HashMap * almacenamientoPoke)
             fprintf(archivo,"%s,",auxPokedex->sigEvo);
             fprintf(archivo,"%d,",auxPokedex->numeroPokedex);
             fprintf(archivo,"%s\n",auxPokedex->region);
+            auxPokedex->cantidadPoke --;
+            eraseMap(almacenamientoPoke,auxPokemon->nombre);
             auxPokemon = nextMap(almacenamientoPoke);
         }
-        printf("Archivo exportado correctamente\n");
-        fclose(nombreArchivo);
-        return;
+        printf(" Pokemon exportados en Caja_Auxiliar.csv correctamente\n");
+        fclose(archivo);
     }
     else{
         return;
@@ -267,35 +286,26 @@ void guardarPokedex(HashMap * mapaPokedex, HashMap * PokedexID, Pokedex * nuevoI
 
 void buscarPorNombrePokedex (HashMap * mapaPokedex)
 {
-    Pokedex * actual = firstMap(mapaPokedex);
-    char * pokeBuscado = (char *)malloc(50*sizeof(char));
-    char * auxiliar = (char *)malloc(50*sizeof(char));  //Variable para almacenar nombre pokemon leido de el mapa
-
-    printf ("Ingresa nombre del Pokemon: \n");
-    gets(pokeBuscado);
-    int existe = 0;
-
-    while (actual != NULL) {
-        auxiliar = strtok(actual->nombre, " "); //strtok = strtoken -> Separa el string segun el delimitador (en este caso, " "), para solo leer el nombre del pokemon. Posibles problemas con pokemons con nombres compuestos o de dos palabras
-        strdup(auxiliar);
-        strdup(pokeBuscado);
-        //printf (" %d -", actual->numeroPokedex);
-        if (strcmp(auxiliar, pokeBuscado) == 0) {
-            existe = 1;
-            printf ("----------------\n");
-            printf ("Pokemon: %s \n", actual->nombre);
-            printf ("Tipo: %s \n", actual->tipo);
-            printf ("Evolucion: %s \n", actual->sigEvo);
-            printf ("Antevolucion: %s \n", actual->prevEvo);
-            printf ("Region: %s \n", actual->region);
-            printf ("ID Pokedex: %d \n", actual->numeroPokedex);
-            printf ("Cantidad: %d \n", actual->cantidadPoke);
-            printf ("----------- \n");
-            break;
-        }
-        actual = nextMap(mapaPokedex);
+    printf("Ingrese el nombre del Pokemon: ");
+    char pokeBuscado[50];
+    scanf(" %s",pokeBuscado);
+    Pokedex * actual = searchMap(mapaPokedex,pokeBuscado);
+    int flag = 0;
+    if(actual == NULL){
+        flag = 1;
     }
-    if (existe == 0) printf ("No se encuentra almacenado el Pokemon de nombre: %s \n", pokeBuscado);
+    if(flag == 0){
+        printf ("----------------\n");
+        printf ("Pokemon: %s \n", actual->nombre);
+        printf ("Tipo: %s \n", actual->tipo);
+        printf ("Evolucion: %s \n", actual->sigEvo);
+        printf ("Antevolucion: %s \n", actual->prevEvo);
+        printf ("Region: %s \n", actual->region);
+        printf ("ID Pokedex: %d \n", actual->numeroPokedex);
+        printf ("Cantidad: %d \n", actual->cantidadPoke);
+        printf ("----------- \n");
+    }
+    if (flag == 1) printf ("No se encuentra almacenado el Pokemon de nombre: %s \n", pokeBuscado);
 }
 
 void buscarPorNombre (HashMap * almacenamientoPoke)
@@ -325,4 +335,40 @@ void buscarPorNombre (HashMap * almacenamientoPoke)
         actual = nextMap(almacenamientoPoke);
     }
     if (existe == 0) printf ("No se encuentra almacenado el Pokemon de nombre: %s \n", pokeBuscado);
+}
+
+void pokemonAtrapado(HashMap * mapaPokedex, HashMap * almacenamientoPoke,int * nroPokemon){
+    Pokemon * newPokemon = (Pokemon *)malloc(sizeof(Pokemon));
+    Pokedex * newPokedex;
+    *nroPokemon ++;
+    if(*nroPokemon >100){
+        printf(" El almacenamiento alcanzo su capacidad Maxima\n");
+        printf(" Recuerde exportar sus Pokemon en un CAJA\n");
+        printf(" Y vuelva a Importar el archivo\n");
+        return;
+    }
+    printf(" Ingresa los datos de Pokemon\n");
+    newPokemon->id = *nroPokemon;
+    scanf("Nombre: %s",newPokemon->nombre);
+    scanf("Genero: %s",newPokemon->genero);
+    scanf("PC: %d",newPokemon->PC);
+    scanf("PS: %d",newPokemon->PS);
+    insertMap(almacenamientoPoke,strdup(newPokemon->nombre),newPokemon);
+    Pokedex * aux = searchMap(mapaPokedex,newPokemon->nombre);
+    if(aux != NULL){
+        aux->cantidadPoke ++;
+    }
+    else{
+        newPokedex = (Pokedex*)malloc(sizeof(Pokedex));
+        strcpy(newPokedex->nombre,newPokemon->nombre);
+        scanf("Evolucion Previa: %s",newPokedex->prevEvo);
+        scanf("Evolucion Posterior: %s",newPokedex->sigEvo);
+        printf("Tipo: ");
+        gets(newPokedex->tipo);
+        getchar();
+        scanf("Numero de la Pokedex: %d",newPokedex->numeroPokedex);
+        scanf("Region: %s",newPokedex->region);
+        newPokedex->cantidadPoke = 1;
+        insertMap(mapaPokedex,strdup(newPokedex->nombre),newPokedex);
+    }
 }
