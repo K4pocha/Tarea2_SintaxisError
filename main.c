@@ -530,6 +530,10 @@ void evolucionarPokemon(HashMap * mapaPokedex,HashMap * almacenamientoId){
         return;
     }
     Pokedex * auxPokedex1 = searchMap(mapaPokedex,aux->nombre);//aux que apunta al nombre del pokemon a evolucionar
+    if(auxPokedex1 == NULL){
+        printf(" Pokemon no encontrado en la pokedex");
+        return;
+    }
     if(strcmp(auxPokedex1->sigEvo,"No Tiene") == 0){
         printf(" El Pokemon ya alcanzo su ultima evolucion\n");
         return;
@@ -544,21 +548,7 @@ void evolucionarPokemon(HashMap * mapaPokedex,HashMap * almacenamientoId){
         printf("Sus PC han aumentado a %d\n",aux->PC);
         printf("Sus PS han aumentado a %d\n",aux->PS);
         auxPokedex1->cantidadPoke -= 1;
+        
     }
-    Pokedex * auxPokedex2 = searchMap(mapaPokedex,aux->nombre);//apunta al nombre del Pokemon Evolucionado
-    if(auxPokedex2 != NULL){
-        auxPokedex2->cantidadPoke += 1;
-        return;
-    }
-    else{
-        auxPokedex2 = (Pokedex *)malloc(sizeof(Pokemon));
-        auxPokedex2->cantidadPoke = 1;
-        strcpy(auxPokedex2->nombre,aux->nombre);
-        auxPokedex2->numeroPokedex = auxPokedex1->numeroPokedex + 1;
-        strcpy(auxPokedex2->prevEvo,auxPokedex1->nombre);
-        strcpy(auxPokedex2->sigEvo,"No Tiene");
-        strcpy(auxPokedex2->region,auxPokedex1->region);
-        strcpy(auxPokedex2->tipo,auxPokedex1->tipo);
-        insertMap(mapaPokedex,strdup(auxPokedex2->nombre),auxPokedex2);
-    }
+    
 }
