@@ -64,12 +64,9 @@ const char *get_csv_field (char * tmp, int k) {
 }
 
 void ImpotarExportarArchivo(HashMap * PokedexName, HashMap * almacenamientoId,int * nroPokemon);    //Lee el csv y almacena datos en los mapas implementados
-void crearPokedex(char * name, char * type, char * prevEvo, char * nextEvo, char * region, int idPokedex, Pokedex * nuevaID);//La variable exist se añade después en la funcion pokeAtrapado
-Pokemon * crearPokemon(int id, int PC, int PS, char * nombre, char * genero);   //Inicializa una estructura nueva, y returna la misma estructura rellenada si corresponde
-void guardarPokedex(HashMap * mapaPokedex, HashMap * PokedexID, Pokedex * nuevoID);
-void buscarPorNombre (HashMap * almacenamientoPoke);
 void buscarPorNombrePokedex (HashMap * mapaPokedex);
 void pokemonAtrapado(HashMap * mapaPokedex, HashMap * almacenamientoId,int * nroPokemon);
+void evolucionarPokemon(HashMap * mapaPokedex,HashMap * almacenamientoId);
 
 
 int main()
@@ -79,73 +76,246 @@ int main()
     HashMap * PokedexID = createMap(200);//Almacena Pokemon de la pokedex por numero de pokedex
     HashMap * almacenamientoPoke = createMap(200); //almacena todos los pokemon que tiene el usuario por nombre
     HashMap * almacenamientoId = createMap(200); //Almacena pokemon del usuario por id
-    ImpotarExportarArchivo(mapaPokedex,almacenamientoId,&nroPokemon);
     //buscarPorNombre (almacenamientoPoke);
-    buscarPorNombrePokedex (mapaPokedex);
-    pokemonAtrapado(mapaPokedex,almacenamientoId,&nroPokemon);
+    
+    int op;
+    int flag=0;
+    int menu;
+    menu = 0;
 
-
-
-    /** int op;
-        while(op < 10)
-    {
-        op = 0;
-        printf("1.- Importar / Exportar Pokemon\n");
-        printf("2.- Capturar Pokemon\n");
-        printf("3.- Evolucionar Pokemon\n");
-        printf("4.- Buscar Pokemon por Tipo\n");
-        printf("5.- Buscar Pokemon por nombre\n");
-        printf("6.- Buscar por nombre en pokedex\n");
-        printf("7.- Mostrar todos los pokemon de la pokedex\n");
-        printf("8.- Mostrar ordenados por PC\n");
-        printf("9.- Liberar Pokemon\n");
-        printf("10.- Mostrar por region\n");
-        printf("Indica la opcion: ");
-        scanf("%d", &op);
+    while (menu >= 0 && menu <= 10) {
+        printf("===============================================================\n");
+        printf("                            POKEDEX                            \n");
+        printf("===============================================================\n");
+        printf("|   1.- Importar o Exportar Pokemon                           |\n");
+        printf("|   2.- Pokemon Atrapado                                      |\n");
+        printf("|   3.- Evolucionar Pokemon                                   |\n");
+        printf("|   4.- Buscar mis Pokemon por tipo                           |\n");
+        printf("|   5.- Buscar mis Pokemon por nombre                         |\n");
+        printf("|   6.- Buscar Pokemon por nombre en Pokedex                  |\n");
+        printf("|   7.- Mostrar todos los Pokemon de la Pokedex               |\n");
+        printf("|   8.- Mostrar mis Pokemon ordenados por PC                  |\n");
+        printf("|   9.- Liberar Pokemon                                       |\n");
+        printf("|  10.- Mostrar Pokemon por region                            |\n");
+        printf("|   0.- Salir                                                 |\n");
+        printf("===============================================================\n");
+        printf(" Ingrese un numero: ");
+        scanf(" %s", menu);
+        while(menu < 0 || menu > 10){
+            printf ("===============================================================\n");
+            printf (" Por favor ingrese uno de los numeros anteriores: ");
+            scanf (" %s", menu);
+            if(menu == 0 ) exit(0);
+        }
+        printf("===============================================================\n");
         fflush(stdin);
-
-        switch(op)
+            
+        switch(menu)
         {
-            case 1: 
-                leerArchivo(PokedexID, PokedexName, PokeStorage, archivo);
+            case 1:
+                ImpotarExportarArchivo(mapaPokedex,almacenamientoId,&nroPokemon);
+                printf ("===============================================================\n");
+                printf ("          Volver al menu: 1 - Salir del programa: 0\n");
+                printf ("===============================================================\n");
+                printf(" Ingrese un numero: ");
+                scanf ("%s", op);
+                while(op < 0 || op > 1){
+                    printf ("===============================================================\n");
+                    printf (" Por favor ingrese uno de los numeros anteriores: ");
+                    scanf (" %s", op);
+                }
+                if (op == 0) return 0;
+                if (op == 1) break;
                 break;
+
 
             case 2:
+                if (flag == 0){
+                    printf(" Archivo no iniciado, recuerde importar sus Pokemon\n");
+                    break;
+                } 
+                pokemonAtrapado(mapaPokedex,almacenamientoId,&nroPokemon);
+                printf ("===============================================================\n");
+                printf ("          Volver al menu: 1 - Salir del programa: 0\n");
+                printf ("===============================================================\n");
+                printf(" Ingrese un numero: ");
+                scanf ("%s", op);
+                while(op < 0 || op > 1){
+                    printf ("===============================================================\n");
+                    printf (" Por favor ingrese uno de los numeros anteriores: ");
+                    scanf (" %s", op);
+                }
+                if (op == 0) return 0;
+                if (op == 1) break;
                 break;
+
 
             case 3:
+                if (flag == 0){
+                    printf(" Archivo no iniciado, recuerde importar Pokemon\n");
+                    break;
+                } 
+                evolucionarPokemon(mapaPokedex, almacenamientoId);
+                printf ("===============================================================\n");
+                printf ("          Volver al menu: 1 - Salir del programa: 0\n");
+                printf ("===============================================================\n");
+                printf(" Ingrese un numero: ");
+                scanf ("%s", op);
+                while(op < 0 || op > 1){
+                    printf ("===============================================================\n");
+                    printf (" Por favor ingrese uno de los numeros anteriores: ");
+                    scanf (" %s", op);
+                }
+                if (op == 0) return 0;
+                if (op == 1) break;
                 break;
 
-            case 4: 
-                break;
+            case 4:
+                if (flag == 0){
+                    printf(" Archivo no iniciado, recuerde importar Pokemon\n");
+                    break;
+                } 
+                //**************************************************************
+                printf ("===============================================================\n");
+                printf ("          Volver al menu: 1 - Salir del programa: 0\n");
+                printf ("===============================================================\n");
+                printf(" Ingrese un numero: ");
+                scanf ("%s", op);
+                while(op < 0 || op > 1){
+                    printf ("===============================================================\n");
+                    printf (" Por favor ingrese uno de los numeros anteriores: ");
+                    scanf (" %s", op);
+                }
+                if (op == 0) return 0;
+                if (op == 1) break;
+                 break;
 
             case 5:
+                if (flag == 0){
+                    printf(" Archivo no iniciado, recuerde importar Pokemon\n");
+                    break;
+                } 
+                //*****************************************************
+                printf ("===============================================================\n");
+                printf ("          Volver al menu: 1 - Salir del programa: 0\n");
+                printf ("===============================================================\n");
+                printf(" Ingrese un numero: ");
+                scanf ("%s", op);
+                while(op < 0 || op > 1){
+                    printf ("===============================================================\n");
+                    printf (" Por favor ingrese uno de los numeros anteriores: ");
+                    scanf (" %s", op);
+                }
+                if (op == 0) return 0;
+                if (op == 1) break;
                 break;
 
-            case 6: 
-
+            case 6:
+                if (flag == 0){
+                    printf(" Archivo no iniciado, recuerde importar Pokemon\n");
+                    break;
+                } 
+                buscarPorNombrePokedex (mapaPokedex);
+                printf ("===============================================================\n");
+                printf ("          Volver al menu: 1 - Salir del programa: 0\n");
+                printf ("===============================================================\n");
+                printf(" Ingrese un numero: ");
+                scanf ("%s", op);
+                while(op < 0 || op > 1){
+                    printf ("===============================================================\n");
+                    printf (" Por favor ingrese uno de los numeros anteriores: ");
+                    scanf (" %s", op);
+                }
+                if (op == 0) return 0;
+                if (op == 1) break;
                 break;
 
-            case 7: 
-
+            case 7:
+                if (flag == 0){
+                    printf(" Archivo no iniciado, recuerde importar Pokemon\n");
+                    break;
+                } 
+                //********************************************************************
+                printf ("===============================================================\n");
+                printf ("          Volver al menu: 1 - Salir del programa: 0\n");
+                printf ("===============================================================\n");
+                printf(" Ingrese un numero: ");
+                scanf ("%s", op);
+                while(op < 0 || op > 1){
+                    printf ("===============================================================\n");
+                    printf (" Por favor ingrese uno de los numeros anteriores: ");
+                    scanf (" %s", op);
+                }
+                if (op == 0) return 0;
+                if (op == 1) break;
                 break;
 
             case 8:
-
+                if (flag == 0){
+                    printf(" Archivo no iniciado, recuerde importar Pokemon\n");
+                    break;
+                } 
+                //aqui va la funcion********************
+                printf ("===============================================================\n");
+                printf ("          Volver al menu: 1 - Salir del programa: 0\n");
+                printf ("===============================================================\n");
+                printf(" Ingrese un numero: ");
+                scanf ("%s", op);
+                while(op < 0 || op > 1){
+                    printf ("===============================================================\n");
+                    printf (" Por favor ingrese uno de los numeros anteriores: ");
+                    scanf (" %s", op);
+                }
+                if (op == 0) return 0;
+                if (op == 1) break;
                 break;
 
             case 9:
-
+                if (flag == 0){
+                    printf(" Archivo no iniciado, recuerde importar Pokemon\n");
+                    break;
+                } 
+                //********************
+                printf ("===============================================================\n");
+                printf ("          Volver al menu: 1 - Salir del programa: 0\n");
+                printf ("===============================================================\n");
+                printf(" Ingrese un numero: ");
+                scanf ("%s", op);
+            while(op < 0 || op > 1){
+                    printf ("===============================================================\n");
+                    printf (" Por favor ingrese uno de los numeros anteriores: ");
+                    scanf (" %s", op);
+                }
+                if (op ==  0) return 0;
+                if (op == 1) break;
                 break;
 
-            case 10: 
-
+            case 10:
+                if (flag == 0){
+                    printf(" Archivo no iniciado, recuerde importar Pokemon\n");
+                    break;
+                } 
+                //¨***************************************************************
+                printf ("===============================================================\n");
+                printf ("          Volver al menu: 1 - Salir del programa: 0\n");
+                printf ("===============================================================\n");
+                printf(" Ingrese un numero: ");
+                scanf ("%s", op);
+                while(op < 0 || op > 1){
+                    printf ("===============================================================\n");
+                    printf (" Por favor ingrese uno de los numeros anteriores: ");
+                    scanf (" %s", op);
+                }
+                if (op == 0) return 0;
+                if (op == 1) break;
                 break;
 
-            case 11: 
-                 break;
+            case 0: 
+                exit(0);
+                break;
         }
-    } **/
+    }
+
     return 0;
 }
 
@@ -242,47 +412,6 @@ void ImpotarExportarArchivo(HashMap * mapaPokedex, HashMap * almacenamientoId,in
         return;
     }
     
-}
-
-void crearPokedex(char * nombre, char * tipo, char * prevEvo, char * sigEvo, char * region, int idPokedex, Pokedex * nuevo){
-
-    strcpy(nuevo->nombre, nombre);
-    strcpy(nuevo->sigEvo, sigEvo);
-    strcpy(nuevo->prevEvo, prevEvo);
-    strcpy(nuevo->region, region);
-    strcpy(nuevo->tipo, tipo);
-    nuevo->numeroPokedex = idPokedex;
-}
-
-Pokemon * crearPokemon(int id, int PC, int PS, char * nombre, char * genero){
-    Pokemon * nuevo = (Pokemon *)malloc(sizeof(Pokemon));
-
-    strcpy(nuevo->genero, genero);
-    strcpy(nuevo->nombre, nombre);
-    nuevo->id = id;
-    nuevo->PC = PC;
-    nuevo->PS = PS;
-    return nuevo;
-}
-
-void guardarPokedex(HashMap * mapaPokedex, HashMap * PokedexID, Pokedex * nuevoID){
-    Pokedex * auxPoke;
-    char * auxkey = (char*)malloc(50*sizeof(char));
-
-    if(searchMap(mapaPokedex, nuevoID->nombre)!= NULL){
-        auxPoke = searchMap(mapaPokedex, nuevoID->nombre);
-        auxPoke->cantidadPoke ++;
-        itoa(nuevoID->numeroPokedex, auxkey, 10);
-        auxPoke = searchMap(PokedexID, auxkey);
-        auxPoke->cantidadPoke ++;
-        return;
-
-    }else if(searchMap(mapaPokedex, nuevoID->nombre)== NULL){
-        insertMap(mapaPokedex, nuevoID->nombre, nuevoID);
-        itoa(nuevoID->numeroPokedex, auxkey, 10);
-        insertMap(PokedexID,auxkey, nuevoID);
-        return;
-    }
 }
 
 /** Hubieron problemas con el almacenamiento, pero se "soluciono" con un strdup en el insertmap de la lectura de archivo. 
@@ -392,5 +521,44 @@ void pokemonAtrapado(HashMap * mapaPokedex, HashMap * almacenamientoId,int * nro
 }
 
 void evolucionarPokemon(HashMap * mapaPokedex,HashMap * almacenamientoId){
-
+    char auxId[5];
+    printf(" Escribe la Id del Pokemon que deseas Evolucionar\n");
+    scanf(" %s",auxId);
+    Pokemon * aux = searchMap(almacenamientoId,auxId);
+    if(aux == NULL){
+        printf(" Pokemon no encontrado\n");
+        return;
+    }
+    Pokedex * auxPokedex1 = searchMap(mapaPokedex,aux->nombre);//aux que apunta al nombre del pokemon a evolucionar
+    if(strcmp(auxPokedex1->sigEvo,"No Tiene") == 0){
+        printf(" El Pokemon ya alcanzo su ultima evolucion\n");
+        return;
+    }
+    else{
+        printf("---------------");
+        printf(" Tu Pokemon %s esta Evolucionando...\n",aux->nombre);
+        strcpy(aux->nombre,auxPokedex1->sigEvo);
+        printf("Tu Pokemon ha evolucionado a %s\n",aux->nombre);
+        aux->PC += (aux->PC * 0.5);
+        aux->PS += (aux->PS * 0.25);
+        printf("Sus PC han aumentado a %d\n",aux->PC);
+        printf("Sus PS han aumentado a %d\n",aux->PS);
+        auxPokedex1->cantidadPoke -= 1;
+    }
+    Pokedex * auxPokedex2 = searchMap(mapaPokedex,aux->nombre);//apunta al nombre del Pokemon Evolucionado
+    if(auxPokedex2 != NULL){
+        auxPokedex2->cantidadPoke += 1;
+        return;
+    }
+    else{
+        auxPokedex2 = (Pokedex *)malloc(sizeof(Pokemon));
+        auxPokedex2->cantidadPoke = 1;
+        strcpy(auxPokedex2->nombre,aux->nombre);
+        auxPokedex2->numeroPokedex = auxPokedex1->numeroPokedex + 1;
+        strcpy(auxPokedex2->prevEvo,auxPokedex1->nombre);
+        strcpy(auxPokedex2->sigEvo,"No Tiene");
+        strcpy(auxPokedex2->region,auxPokedex1->region);
+        strcpy(auxPokedex2->tipo,auxPokedex1->tipo);
+        insertMap(mapaPokedex,strdup(auxPokedex2->nombre),auxPokedex2);
+    }
 }
