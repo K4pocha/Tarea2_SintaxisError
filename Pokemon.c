@@ -299,9 +299,9 @@ void evolucionarPokemon(HashMap * mapaPokedex,HashMap * almacenamientoId){
 void buscarPokemonPorTipo(HashMap * mapaPokedex,HashMap * almacenamientoId){
     Pokemon * aux = firstMap(almacenamientoId);
     Pokedex * auxPokedex;
-    printf(" Ingrese el tipo que desea buscar");
+    printf(" Ingrese el tipo que desea buscar: ");
     char Tipo[50],auxTipo[50];
-    int contador;
+    int contador,cantidad = 0;
     scanf(" %s",Tipo);
     printf(" Pokemon de tipo %s\n",Tipo);
     while(aux != NULL){
@@ -311,6 +311,7 @@ void buscarPokemonPorTipo(HashMap * mapaPokedex,HashMap * almacenamientoId){
         }
         else{
             strcpy(auxTipo,auxPokedex->tipo);
+            strcat(auxTipo," ");
             contador = 0;
             while(get_csv_field(auxTipo,contador) != NULL){
                 if(strcmp(get_csv_field(auxTipo,contador),Tipo) == 0){
@@ -320,6 +321,7 @@ void buscarPokemonPorTipo(HashMap * mapaPokedex,HashMap * almacenamientoId){
                     printf("PC: %d   ",aux->PC);
                     printf("PS: %d\n",aux->PS);
                     contador = 200;
+                    cantidad +=1;
                 }
                 else{
                     contador += 1;
@@ -328,4 +330,6 @@ void buscarPokemonPorTipo(HashMap * mapaPokedex,HashMap * almacenamientoId){
             aux = nextMap(almacenamientoId);
         }
     }
+    printf(" Se encontraron %d Pokemon de tipo %s\n",cantidad,Tipo);
 }
+
