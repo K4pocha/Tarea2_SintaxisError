@@ -20,6 +20,7 @@ int main()
     menu = 0;
 
     while (menu >= 0 && menu <= 10) {
+        menu = -1;
         printf("===============================================================\n");
         printf("                            POKEDEX                            \n");
         printf("===============================================================\n");
@@ -37,9 +38,12 @@ int main()
         printf("===============================================================\n");
         printf(" Ingrese un numero: ");
         scanf(" %d", &menu);
+
         while(menu < 0 || menu > 10){
             printf ("===============================================================\n");
             printf (" Por favor ingrese uno de los numeros anteriores: ");
+            while(getchar()!='\n'); //limpiar buffer del teclado en caso de que el usuario ingrese una 
+            //opcion no valida
             scanf (" %d", &menu);
             if(menu == 0 ) exit(0);
         }
@@ -47,7 +51,8 @@ int main()
         fflush(stdin);
             
         switch(menu)
-        {
+        {   
+            op = -1;
             case 1:
                 ImpotarExportarArchivo(mapaPokedex,almacenamientoId,&nroPokemon,&flag);
                 printf ("===============================================================\n");
@@ -58,6 +63,7 @@ int main()
                 while(op < 0 || op > 1){
                     printf ("===============================================================\n");
                     printf (" Por favor ingrese uno de los numeros anteriores: ");
+                    while(getchar()!='\n');
                     scanf ("%d", &op);
                 }
                 if (op == 0) return 0;
@@ -79,6 +85,7 @@ int main()
                 while(op < 0 || op > 1){
                     printf ("===============================================================\n");
                     printf (" Por favor ingrese uno de los numeros anteriores: ");
+                    while(getchar()!='\n');
                     scanf ("%d", &op);
                 }
                 if (op == 0) return 0;
@@ -100,6 +107,7 @@ int main()
                 while(op < 0 || op > 1){
                     printf ("===============================================================\n");
                     printf (" Por favor ingrese uno de los numeros anteriores: ");
+                    while(getchar()!='\n');
                     scanf ("%d", &op);
                 }
                 if (op == 0) return 0;
@@ -120,6 +128,7 @@ int main()
                 while(op < 0 || op > 1){
                     printf ("===============================================================\n");
                     printf (" Por favor ingrese uno de los numeros anteriores: ");
+                    while(getchar()!='\n');
                     scanf ("%d", &op);
                 }
                 if (op == 0) return 0;
@@ -131,7 +140,7 @@ int main()
                     printf(" Archivo no iniciado, recuerde importar Pokemon\n");
                     break;
                 } 
-                //*****************************************************
+                buscarPorNombrAlmacenamiento(almacenamientoId);
                 printf ("===============================================================\n");
                 printf ("          Volver al menu: 1 - Salir del programa: 0\n");
                 printf ("===============================================================\n");
@@ -140,6 +149,7 @@ int main()
                 while(op < 0 || op > 1){
                     printf ("===============================================================\n");
                     printf (" Por favor ingrese uno de los numeros anteriores: ");
+                    while(getchar()!='\n');
                     scanf ("%d", &op);
                 }
                 if (op == 0) return 0;
@@ -160,6 +170,7 @@ int main()
                 while(op < 0 || op > 1){
                     printf ("===============================================================\n");
                     printf (" Por favor ingrese uno de los numeros anteriores: ");
+                    while(getchar()!='\n');
                     scanf ("%d", &op);
                 }
                 if (op == 0) return 0;
@@ -180,6 +191,7 @@ int main()
                 while(op < 0 || op > 1){
                     printf ("===============================================================\n");
                     printf (" Por favor ingrese uno de los numeros anteriores: ");
+                    while(getchar()!='\n');
                     scanf ("%d", &op);
                 }
                 if (op == 0) return 0;
@@ -200,6 +212,7 @@ int main()
                 while(op < 0 || op > 1){
                     printf ("===============================================================\n");
                     printf (" Por favor ingrese uno de los numeros anteriores: ");
+                    while(getchar()!='\n');
                     scanf ("%d", &op);
                 }
                 if (op == 0) return 0;
@@ -220,6 +233,7 @@ int main()
                 while(op < 0 || op > 1){
                     printf ("===============================================================\n");
                     printf (" Por favor ingrese uno de los numeros anteriores: ");
+                    while(getchar()!='\n');
                     scanf ("%d", &op);
                 }
                 if (op ==  0) return 0;
@@ -240,6 +254,7 @@ int main()
                 while(op < 0 || op > 1){
                     printf ("===============================================================\n");
                     printf (" Por favor ingrese uno de los numeros anteriores: ");
+                    while(getchar()!='\n');
                     scanf ("%d", &op);
                 }
                 if (op == 0) return 0;

@@ -71,17 +71,21 @@ void ImpotarExportarArchivo(HashMap * mapaPokedex, HashMap * almacenamientoId,in
     printf(" 1. Importar Pokemon\n");
     printf(" 2. Exportar Pokemon\n");
     printf(" 0. Volver al menu\n");
+    printf ("===============================================================\n");
     int op;
+    printf(" Ingrese un Numero: ");
     scanf(" %d",&op);
     while((op < 0 || op > 2)){
         printf ("===============================================================\n");
         printf (" Por favor ingrese uno de los numeros anteriores: ");
+        while(getchar()!='\n');
         scanf (" %d", &op);
     }
     if(op == 1){
         *flag = 1;
-        printf(" Ingrese el nombre del archivo:\n");
-        scanf("%s",nombreArchivo);
+        printf(" Ingrese el nombre del archivo: ");
+        getchar();
+        gets(nombreArchivo);
         archivo = fopen(nombreArchivo,"r");
         if(archivo == NULL){
             printf(" El archivo no existe\n");
@@ -186,29 +190,24 @@ void buscarPorNombrePokedex (HashMap * mapaPokedex)
     if (flag == 1) printf ("No se encuentra almacenado el Pokemon de nombre: %s \n", pokeBuscado);
 }
 
-void buscarPorNombre (HashMap * almacenamientoPoke)
+void buscarPorNombrAlmacenamiento (HashMap * almacenamientoPoke)
 {
     Pokemon * actual = firstMap(almacenamientoPoke);
-    char * pokeBuscado = (char *)malloc(50*sizeof(char));
-    char * auxiliar = (char *)malloc(50*sizeof(char));  //Variable para almacenar nombre pokemon leido de el mapa
+    char pokeBuscado[50];
 
     printf ("Ingresa nombre del Pokemon: \n");
     gets(pokeBuscado);
     int existe = 0;
-
+    printf ("------------------ \n");
     while (actual != NULL) {
-        auxiliar = strtok(actual->nombre, " "); //strtok = strtoken -> Separa el string segun el delimitador (en este caso, " "), para solo leer el nombre del pokemon. Posibles problemas con pokemons con nombres compuestos o de dos palabras
-        strdup(auxiliar);
-        strdup(pokeBuscado);
-        //printf (" %d -", actual->id);
-        if (strcmp(auxiliar, pokeBuscado) == 0) {
+        
+        if (strcmp(actual->nombre, pokeBuscado) == 0) {
             existe = 1;
-            printf ("---------------- \n");
+            printf ("ID: %d\n", actual->id);
             printf ("Pokemon: %s \n", actual->nombre);
             printf ("PC: %d \n", actual->PC);
             printf ("PS: %d \n", actual->PS);
-            printf ("-----------");
-            break;
+            printf ("------------------ \n");
         }
         actual = nextMap(almacenamientoPoke);
     }
@@ -332,4 +331,3 @@ void buscarPokemonPorTipo(HashMap * mapaPokedex,HashMap * almacenamientoId){
     }
     printf(" Se encontraron %d Pokemon de tipo %s\n",cantidad,Tipo);
 }
-

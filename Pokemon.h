@@ -11,6 +11,8 @@ void ImpotarExportarArchivo(HashMap * PokedexName, HashMap * almacenamientoId,in
 
 void buscarPorNombrePokedex (HashMap * mapaPokedex);
 
+void buscarPorNombrAlmacenamiento (HashMap * almacenamientoPoke);
+
 void pokemonAtrapado(HashMap * mapaPokedex, HashMap * almacenamientoId,int * nroPokemon);
 
 void evolucionarPokemon(HashMap * mapaPokedex,HashMap * almacenamientoId);
