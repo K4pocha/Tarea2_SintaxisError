@@ -63,7 +63,7 @@ const char *get_csv_field (char * tmp, int k) {
     return NULL;
 }
 
-void ImpotarExportarArchivo(HashMap * mapaPokedex, HashMap * almacenamientoId,int * nroPokemon, int * flag){
+void ImpotarExportarArchivo(HashMap * mapaPokedex, HashMap * almacenamientoId,int * nroPokemon,int * nroPokedex, int * flag){
     char nombreArchivo[50];
     FILE * archivo;
     char auxId[5];
@@ -118,6 +118,7 @@ void ImpotarExportarArchivo(HashMap * mapaPokedex, HashMap * almacenamientoId,in
                 newPokedex->numeroPokedex = atoi(get_csv_field(linea,8));
                 strcpy(newPokedex->region,get_csv_field(linea,9));
                 newPokedex->cantidadPoke = 1;
+                *nroPokedex += 1;
                 insertMap(mapaPokedex,strdup(newPokedex->nombre),newPokedex);
             }
         }
@@ -330,4 +331,34 @@ void buscarPokemonPorTipo(HashMap * mapaPokedex,HashMap * almacenamientoId){
         }
     }
     printf(" Se encontraron %d Pokemon de tipo %s\n",cantidad,Tipo);
+}
+
+int compararNroPokedex(const void * a,const void * b){
+    Pokedex * aux1 = (Pokedex *)a;
+    Pokedex * aux2 = (Pokedex *)b;
+    
+    int nroPokedex1 = (aux1->numeroPokedex);
+    int nroPokedex2 = (aux2->numeroPokedex);
+    return ( nroPokedex1 - nroPokedex2);
+}
+
+void mostrarPokemonPokedex(HashMap * mapaPokedex,int nroPokedex){
+    Pokedex ** new = (Pokedex**)malloc(sizeof(Pokedex*)*nroPokedex);
+    Pokedex * aux = firstMap(mapaPokedex);
+    for(int i = 0;aux != NULL;i++){
+        new[i] = aux;
+        aux = nextMap(mapaPokedex); 
+    }
+    qsort(new,nroPokedex,sizeof(Pokedex *),compararNroPokedex);
+    for(int i = 0;i < nroPokedex;i++){
+        printf("Pokemon %d\n",new[i]->numeroPokedex);
+        printf("Nombre: %s   ",new[i]->nombre);
+        printf("Tipo(s): %s   ",new[i]->tipo);
+        printf("Cantidad: %d   \n",new[i]->cantidadPoke);
+        printf("Evolucion Previa: %s   ",new[i]->prevEvo);
+        printf("Evolucion Poosterior: %s   \n",new[i]->sigEvo);
+        printf("Region: %s   \n",new[i]->region);
+        printf("---------------------------------------------------------------\n");
+    }
+    free(aux);
 }

@@ -8,6 +8,7 @@
 int main()
 {
     int nroPokemon = 0;//cuenta la cantidad de pokemon que hay en el almacenamiento
+    int nroPokedex = 0;
     HashMap * mapaPokedex = createMap(200);//almacena Pokemon de la pokedex por nombre
     HashMap * PokedexID = createMap(200);//Almacena Pokemon de la pokedex por numero de pokedex
     HashMap * almacenamientoPoke = createMap(200); //almacena todos los pokemon que tiene el usuario por nombre
@@ -54,7 +55,7 @@ int main()
         {   
             op = -1;
             case 1:
-                ImpotarExportarArchivo(mapaPokedex,almacenamientoId,&nroPokemon,&flag);
+                ImpotarExportarArchivo(mapaPokedex,almacenamientoId,&nroPokemon,&nroPokedex,&flag);
                 printf ("===============================================================\n");
                 printf ("          Volver al menu: 1 - Salir del programa: 0\n");
                 printf ("===============================================================\n");
@@ -182,7 +183,7 @@ int main()
                     printf(" Archivo no iniciado, recuerde importar Pokemon\n");
                     break;
                 } 
-                //********************************************************************
+                mostrarPokemonPokedex(mapaPokedex,nroPokedex);
                 printf ("===============================================================\n");
                 printf ("          Volver al menu: 1 - Salir del programa: 0\n");
                 printf ("===============================================================\n");
