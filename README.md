@@ -10,27 +10,27 @@
 
 **Francisco Molinas:**
 
-    *Positivos:*
+*Positivos:*
       -Disponibilidad para el trabajo en grupo
       -Buen trabajo personal
-    *A mejorar:*
+*A mejorar:*
       -Suele no comentar el codigo que realiza
 
-  **Edgar Cortes:**
+**Edgar Cortes:**
 
-        *Positvos:*
+*Positivos:*        
         -Codigo ordenado y entendible
         -Buena organizacion del tiempo con su grupo
-        *A mejorar:*
-        -Dificultad para entender el codigo de los demas compañeros
+*A mejorar:*
+    -Dificultad para entender el codigo de los demas compañeros
 
 **Nicolas Oñate:**
-        *Positivos:*
-        -Facilidad para la resolucion del problema
-        -Disponibilidad para el trabajo en conjunto
-        *A mejorar*
-        -Suele no comentar el codigo que realiza
-        -Tiempo disponible para trabajo personal
+*Positivos:*
+    -Facilidad para la resolucion del problema
+    -Disponibilidad para el trabajo en conjunto
+*A mejorar*
+    -Suele no comentar el codigo que realiza
+    -Tiempo disponible para trabajo personal
 
 
 ### Puntos de premio o castigo
