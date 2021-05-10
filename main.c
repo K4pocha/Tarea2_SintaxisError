@@ -11,7 +11,7 @@ int main()
     int nroPokedex = 0;
     HashMap * mapaPokedex = createMap(200);//almacena Pokemon de la pokedex por nombre
     HashMap * almacenamientoId = createMap(200); //Almacena pokemon del usuario por id
-    FILE* aux = fopen("Caja_Auxiliar.csv","w");
+    FILE* aux = fopen("Caja_Auxiliar.csv","w"); //Apertura de archivo para exportar
     fprintf(aux,"id,nombre,tipos,pc,ps,sexo,evolucion previa,evolucion posterior,numero pokedex,region\n");
     fclose(aux);
     
