@@ -2,12 +2,14 @@
 
 ## Problemas Codigo
 
-**Funcion 4 - Buscar pokemon por tipo** problemas al imprimir los pokemons, imprime 1 pokemon menos de el total de los pokemons de ese tipos en el archivo
-**El correcto ingreso de datos dependera del usuario**
+**Funcion 4 - Buscar pokemon por tipo** problemas al imprimir los pokemons, imprime 1 pokemon menos de el total de los pokemons de ese tipos en el archivo.
+
+**El correcto ingreso de datos dependera del usuario.**
 
 ### Aspectos positivos y a mejorar
 
 **Francisco Molinas:**
+
     *Positivos:*
       -Disponibilidad para el trabajo en grupo
       -Buen trabajo personal
@@ -15,19 +17,20 @@
       -Suele no comentar el codigo que realiza
 
   **Edgar Cortes:**
-    *Positvos:*
-      -Codigo ordenado y entendible
-      -Buena organizacion del tiempo con su grupo
-    *A mejorar:*
-      -Dificultad para entender el codigo de los demas compañeros
 
-  **Nicolas Oñate:**
-    *Positivos:*
-      -Facilidad para la resolucion del problema
-      -Disponibilidad para el trabajo en conjunto
-    *A mejorar*
-      -Suele no comentar el codigo que realiza
-      -Tiempo disponible para trabajo personal
+        *Positvos:*
+        -Codigo ordenado y entendible
+        -Buena organizacion del tiempo con su grupo
+        *A mejorar:*
+        -Dificultad para entender el codigo de los demas compañeros
+
+**Nicolas Oñate:**
+        *Positivos:*
+        -Facilidad para la resolucion del problema
+        -Disponibilidad para el trabajo en conjunto
+        *A mejorar*
+        -Suele no comentar el codigo que realiza
+        -Tiempo disponible para trabajo personal
 
 
 ### Puntos de premio o castigo
