@@ -5,6 +5,7 @@
 **Funcion 4 - Buscar pokemon por tipo** problemas al imprimir los pokemons, imprime 1 pokemon menos de el total de los pokemons de ese tipos en el archivo.
 
 **El correcto ingreso de datos dependera del usuario.**
+Esto quiere decir, los datos deben ser ingresados tal cual salen en el archivo importado. Como regla general, es la primera letra de la palabra en mayuscula y el resto en minuscula (Pueden existir exepciones),
 
 ### Aspectos positivos y a mejorar
 
@@ -24,16 +25,16 @@
         -Buena organizacion del tiempo con su grupo.
 
 *A mejorar:*
-    -Dificultad para entender el codigo de los demas compañeros.
+        -Dificultad para entender el codigo de los demas compañeros.
 
 **Nicolas Oñate:**
 *Positivos:*
-    -Facilidad para la resolucion del problema.
-    -Disponibilidad para el trabajo en conjunto.
+        -Facilidad para la resolucion del problema.
+        -Disponibilidad para el trabajo en conjunto.
 
 *A mejorar*
-    -Suele no comentar el codigo que realiza.
-    -Tiempo disponible para trabajo personal.
+        -Suele no comentar el codigo que realiza.
+        -Tiempo disponible para trabajo personal.
 
 
 ### Puntos de premio o castigo
