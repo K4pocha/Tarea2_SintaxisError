@@ -5,7 +5,9 @@
 **Funcion 4 - Buscar pokemon por tipo** problemas al imprimir los pokemons, imprime 1 pokemon menos de el total de los pokemons de ese tipos en el archivo.
 
 **El correcto ingreso de datos dependera del usuario.**
-Esto quiere decir, los datos deben ser ingresados tal cual salen en el archivo importado. Como regla general, es la primera letra de la palabra en mayuscula y el resto en minuscula (Pueden existir exepciones),
+Esto quiere decir, los datos deben ser ingresados tal cual salen en el archivo importado. Como regla general, es la primera letra de la palabra en mayuscula y el resto en minuscula (Pueden existir exepciones).
+
+**El nombre del archivo para exportar** Esta definido com Caja_Auxiliar.csv, por lo que si se buscase exportar a otro archivo como "maletin" de Pokemon, podria haber un problema, pero es netamente del nombre del archivo.
 
 ### Aspectos positivos y a mejorar
 
