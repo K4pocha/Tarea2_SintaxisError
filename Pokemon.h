@@ -19,8 +19,16 @@ void evolucionarPokemon(HashMap * mapaPokedex,HashMap * almacenamientoId);
 
 void buscarPokemonPorTipo(HashMap * mapaPokedex,HashMap * almacenamientoId);
 
-int compararNroPokedex(const void * a,const void * b);
+void bubbleSortNroPokedex(Pokedex ** Array,int nroPokedex);
 
 void mostrarPokemonPokedex(HashMap * mapaPokedex,int nroPokedex);
+
+void bubbleSortPC(Pokemon ** Array,int nroPokedex);
+
+void mostrarPokemonOrdenadosPorPc(HashMap * almacenamientoId,int nroPokemon);
+
+void liberarPokemon(HashMap * almacenamientoId, HashMap * mapaPokedex,int * nroPokemon);
+
+void mostarPokemonPorRegion(HashMap * mapaPokedex);
 
 #endif /* POKEMON_h */
